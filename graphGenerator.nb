@@ -1,0 +1,6 @@
+Notebook[{Cell[
+BoxData[{RowBox[{"connectedGraph = Function[{n, m},While[True, g = RandomGraph[{n, m}];If[ConnectedGraphQ[g], Break[]]]; g]"}],"\n",RowBox[
+{"fixedConnectedGraphs = Function[{n, m, k, s}, SeedRandom[s]; l = {};While[Length[l] < k, AppendTo[l, connectedGraph[n, m]]]; l]"}],"\n",RowBox[
+{"CloudDeploy[APIFunction[{","\"n\""," \[Rule] ","\"Integer\"",", ","\"m\""," \[Rule] ","\"Integer\"",", ","\"k\""," \[Rule] ","\"Integer\""," \[Rule] 1, ","\"s\""," \[Rule] ","\"Integer\""," \[Rule] 1}, EdgeList /@ fixedConnectedGraphs[#n, #m, #k, #s] &, {","\"Text\"",",","\"JSON\"","}], Permissions \[Rule] ","\"Public\"","]","\n","\n","\n"}]}],
+"Input",CellID->11,CellLabel->"In[1]:= "]},StyleDefinitions->"Default.nb",WindowSize->{874,739},
+FrontEndVersion->"10.0 for Wolfram Cloud Platform (June 2 2014)"]
