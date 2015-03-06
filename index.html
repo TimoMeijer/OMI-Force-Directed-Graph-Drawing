@@ -37,11 +37,11 @@
                     running = true;
 
                     var research = new omi.Research({
-                        linkStrengths: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], // linkStrengths to be tested
-                        charges: [0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100], // charges to be tested
-                        graphs: [[20,24], [20,70], [20,170], [100, 120], [100, 1000], [100, 10000]], // graphs to be tested, defined as [vertexCount, edgeCount]
-                        graphRepeat: 3, // How many different graphs will be tested for each combination of vertex/edges
-                        repeat: 100, // How many times each configuration will be tested
+                        linkStrengths: [0.1, 1.0]/*[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]*/, // linkStrengths to be tested
+                        charges: [1, -1000]/*[0, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100]*/, // charges to be tested
+                        graphs: [[20,24]]/*[[20,24], [20,70], [20,170], [100, 120], [100, 1000], [100, 10000]]*/, // graphs to be tested, defined as [vertexCount, edgeCount]
+                        graphRepeat: 1/*3*/, // How many different graphs will be tested for each combination of vertex/edges
+                        repeat: 1/*100*/, // How many times each configuration will be tested
                         metrics: omi.metric, // Metric functions to be used to process the generated graphs
                         wolframUrl: $('#wolframUrl').val(), // The Wolfram API URL where graphs can be fetched from
                         visual: true, // If a visual interface should be selector
