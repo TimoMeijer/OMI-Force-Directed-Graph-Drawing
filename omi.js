@@ -289,16 +289,16 @@ var omi = {};
 
             tempNode = result.nodes[edge[0]];
             if(!tempNode){
-                results.nodes[edge[0]] = [];
+                results.nodes[edge[0]] = {edges: []};
             } 
-            tempNode = tempNode.push(edge);
+            tempNode = tempNode.edges.push(edge);
             results.nodes[edge[0]] = tempNode;
 
             tempNode = result.nodes[edge[1]];
             if(!tempNode){
-                results.nodes[edge[1]] = [];
+                results.nodes[edge[1]] = {edges: []};;
             }
-            tempNode = tempNode.push(edge);
+            tempNode = tempNode.edges.push(edge);
             results.nodes[edge[1]] = tempNode;
         });
 
@@ -346,7 +346,12 @@ var omi = {};
     };
 
     omi.angularResolutions = function(graph) {
-        
+      return graph.nodes.map(function(node){
+        var edges = node.edges;
+        var endpoints = [];
+        var nodePos = {x:0; y:0;};
+        //idunno lol
+      });
     }
 
     omi.metric = {
