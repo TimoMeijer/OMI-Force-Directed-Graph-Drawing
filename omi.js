@@ -229,14 +229,14 @@ var omi = {};
             }
             for (key in result.results) {
                 if (result.results.hasOwnProperty(key)) {
-                    row.push(result.results[key]);
+                    row.push(result.results[key].toString().replace('.', ','));
                 }
             }
 
             csv.push(row);
         });
 
-        return d3.csv.formatRows(csv);
+        return d3.tsv.formatRows(csv);
     };
 
     omi.wolframGetGraphs = function(url, n, m, k, s) {
