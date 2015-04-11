@@ -374,7 +374,7 @@ var omi = {};
                 return Math.pow(length - mean, 2);
             });
 
-            return squaredDifferences.reduce(function(carry, squaredDifference) {
+            return Math.sqrt(squaredDifferences.reduce(function(carry, squaredDifference) {
                     return carry + squaredDifference;
                 }, 0) / squaredDifferences.length;
         }/*, TODO: Decide how exactly we want to handle & calculate this
