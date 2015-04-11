@@ -27,7 +27,7 @@ var omi = {};
         that.testFinished = new signals.Signal();
 
         that.numTests = that.settings.linkStrengths.length * that.settings.charges.length
-            * that.settings.graphs.length * that.settings.graphRepeat * that.settings.repeat;;
+            * that.settings.graphs.length * that.settings.graphRepeat * that.settings.repeat;
 
         that.start = function() {
             // As this is done async, we use a Promise to signal when we're ready to return the results
@@ -349,15 +349,17 @@ var omi = {};
                 s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
                 t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
 
-                return (s >= 0 && s <= 1 && t >= 0 && t <= 1);
+                return (s > 0 && s < 1 && t > 0 && t < 1);
             };
 
             var pairs = omi.combinations(graph.links, graph.links);
 
-            return pairs.filter(function(pair) {
-                    return lineIntersect(pair[0].source.x, pair[0].source.y, pair[0].target.x, pair[0].target.y,
-                        pair[1].source.x, pair[1].source.y, pair[1].target.x, pair[1].target.y);
-                }).length;
+            var crossingPairs = pairs.filter(function(pair) {
+                return lineIntersect(pair[0].source.x, pair[0].source.y, pair[0].target.x, pair[0].target.y,
+                    pair[1].source.x, pair[1].source.y, pair[1].target.x, pair[1].target.y);
+            });
+
+            return crossingPairs.length/2; // Divide by two, as we gather both pairs (a,b) and (b,a).
         },
         edgeLengthAverage: function(graph) {
             return omi.edgeLengths(graph).reduce(function(carry, length) {
