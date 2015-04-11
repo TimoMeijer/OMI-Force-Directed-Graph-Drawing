@@ -353,14 +353,26 @@ var omi = {};
                 return (s > 0 && s < 1 && t > 0 && t < 1);
             };
 
-            var pairs = omi.combinations(graph.links, graph.links);
+            var indices = Array.apply(0, Array(graph.links.length)).map(function(_,i) { return i; });
+            var pairs = omi.combinations(indices, indices)
+                // Remove pairs of (a,a) or duplicates, eg remove one of (a,b) and (b,a)
+                .reduce(function(carry, current) {
+                    if (!(current[0] == current[1] || carry.filter(function(v) { return v[0] == current[1] && v[1] == current[0]; }).length > 0)) {
+                        carry.push(current);
+                    }
+
+                    return carry;
+                }, [])
+                .map(function(current) {
+                    return [graph.links[current[0]], graph.links[current[1]]];
+                });
 
             var crossingPairs = pairs.filter(function(pair) {
                 return lineIntersect(pair[0].source.x, pair[0].source.y, pair[0].target.x, pair[0].target.y,
                     pair[1].source.x, pair[1].source.y, pair[1].target.x, pair[1].target.y);
             });
 
-            return crossingPairs.length/2; // Divide by two, as we gather both pairs (a,b) and (b,a).
+            return crossingPairs.length;
         },
         edgeLengthAverage: function(graph) {
             return omi.edgeLengths(graph).reduce(function(carry, length) {
