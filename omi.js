@@ -287,8 +287,15 @@ var omi = {};
                 target: edge[1]
             });
 
-            result.nodes[edge[0]] = {};
-            result.nodes[edge[1]] = {};
+            if (!result.nodes[edge[0]]) {
+                result.nodes[edge[0]] = {edges: []};
+            }
+            if (!result.nodes[edge[1]]) {
+                result.nodes[edge[1]] = {edges: []};
+            }
+
+            result.nodes[edge[0]].edges.push(edge[1]);
+            result.nodes[edge[1]].edges.push(edge[0]);
         });
 
         return result;
@@ -389,10 +396,53 @@ var omi = {};
 
             return Math.sqrt(squaredDifferences.reduce(function(carry, squaredDifference) {
                     return carry + squaredDifference;
-                }, 0) / squaredDifferences.length;
-        }/*, TODO: Decide how exactly we want to handle & calculate this
+                }, 0) / squaredDifferences.length);
+        },
+        // Metrics for Graph Drawing Aesthetics, Helen C. Purchase, Section 6
         angularResolution: function(graph) {
+            var angleDifferences = graph.nodes.map(function(vertex) {
+                var optimalAngle = 360 / vertex.edges.length;
 
-        }*/
+                var pairs = omi.combinations(vertex.edges, vertex.edges)
+                    // Remove pairs of (a,a) or duplicates, eg remove one of (a,b) and (b,a)
+                    .reduce(function(carry, current) {
+                        if (!(current[0] == current[1] || carry.filter(function(v) { return v[0] == current[1] && v[1] == current[0]; }).length > 0)) {
+                            carry.push(current);
+                        }
+
+                        return carry;
+                    }, [])
+                    .map(function(current) {
+                        return [graph.nodes[current[0]], graph.nodes[current[1]]];
+                    });
+
+                var angles = pairs.map(function(current) {
+                    var u1 = current[0].x - vertex.x;
+                    var u2 = current[0].y - vertex.y;
+                    var v1 = current[1].x - vertex.x;
+                    var v2 = current[1].y - vertex.y;
+
+                    var lengthu = Math.sqrt(Math.pow(u1,2) + Math.pow(u2,2));
+                    var lengthv = Math.sqrt(Math.pow(v1,2) + Math.pow(v2,2));
+
+                    var dotProduct = u1*v1 + u2*v2;
+
+                    return Math.acos(dotProduct / (lengthu * lengthv)) * 180/Math.PI;
+                });
+
+                var minimumAngle = angles.reduce(function(carry, current) {
+                    if (carry > current) {
+                        return current;
+                    } else {
+                        return carry;
+                    }
+                }, optimalAngle);
+
+                return Math.abs((optimalAngle - minimumAngle) / optimalAngle);
+
+            });
+
+            return 1 - angleDifferences.reduce(function(pv, cv) { return pv + cv; }, 0) / graph.nodes.length;
+        }
     };
 })();
