@@ -287,8 +287,19 @@ var omi = {};
                 target: edge[1]
             });
 
-            result.nodes[edge[0]] = {};
-            result.nodes[edge[1]] = {};
+            tempNode = result.nodes[edge[0]];
+            if(!tempNode){
+                results.nodes[edge[0]] = {edges: []};
+            } 
+            tempNode = tempNode.edges.push(edge);
+            results.nodes[edge[0]] = tempNode;
+
+            tempNode = result.nodes[edge[1]];
+            if(!tempNode){
+                results.nodes[edge[1]] = {edges: []};;
+            }
+            tempNode = tempNode.edges.push(edge);
+            results.nodes[edge[1]] = tempNode;
         });
 
         return result;
@@ -334,6 +345,15 @@ var omi = {};
         });
     };
 
+    omi.angularResolutions = function(graph) {
+      return graph.nodes.map(function(node){
+        var edges = node.edges;
+        var endpoints = [];
+        var nodePos = {x:0; y:0;};
+        //idunno lol
+      });
+    }
+
     omi.metric = {
         edgeCrossings: function(graph) {
             // Adapted from: https://gist.github.com/Joncom/e8e8d18ebe7fe55c3894
@@ -375,9 +395,11 @@ var omi = {};
             return squaredDifferences.reduce(function(carry, squaredDifference) {
                     return carry + squaredDifference;
                 }, 0) / squaredDifferences.length;
-        }/*, TODO: Decide how exactly we want to handle & calculate this
-        angularResolution: function(graph) {
-
-        }*/
+        }/*, TODO: Decide how exactly we want to handle & calculate this 
+        it will be defined as smalest angle - optimal angle per node
+        */
+        angularResolutionAverage: function(graph) {
+        
+        }
     };
 })();
