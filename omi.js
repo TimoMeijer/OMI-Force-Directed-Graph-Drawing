@@ -328,10 +328,11 @@ var omi = {};
         return combine(input);
     };
 
+    omi.edgeLength = function(edge) {
+        return Math.sqrt(Math.pow(edge.source.x - edge.target.x, 2) + Math.pow(edge.source.y - edge.target.y, 2));
+    };
     omi.edgeLengths = function(graph) {
-        return graph.links.map(function(edge) {
-            return Math.sqrt(Math.pow(edge.source.x - edge.target.x, 2) + Math.pow(edge.source.y - edge.target.y, 2));
-        });
+        return graph.links.map(omi.edgeLength);
     };
 
     omi.metric = {
